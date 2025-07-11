@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "FullstacksJS Jobs",
+  "version": "0.0",
+  "description": "The purpose of developing the FullstacksJS Jobs system is to create a Google Chrome browser extension that allows users to save job seeker records identified on LinkedIn and mention them under relevant job ads.",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "public/icon-48.png"
+    },
+    "default_title": "FullstacksJS Jobs: Save and Mention Job Seekers"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.linkedin.com/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "48": "public/icon-48.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["public/add-icon.png"],
+      "matches": ["https://www.linkedin.com/*"]
+    }
+  ]
+}
