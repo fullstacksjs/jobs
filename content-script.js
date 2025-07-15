@@ -6,7 +6,6 @@ const DomUtils = {
       const classes = Array.isArray(options.classNames)
         ? options.classNames
         : [options.classNames];
-
       element.classList.add(...classes);
     }
 
@@ -51,7 +50,6 @@ const ChromeStorage = {
         if (chrome.runtime.lastError) {
           console.error(
             "Error retrieving data from storage:",
-
             chrome.runtime.lastError,
           );
 
@@ -69,7 +67,6 @@ const ChromeStorage = {
         if (chrome.runtime.lastError) {
           console.error(
             "Error saving data to storage:",
-
             chrome.runtime.lastError,
           );
 
@@ -84,9 +81,7 @@ const ChromeStorage = {
 
 const ReactionModule = {
   CUSTOM_SAVE_BUTTON_CLASS: "custom-save-job-seeker",
-
   REACTIONS_MENU_SELECTOR: ".reactions-menu",
-
   SAVE_ICON_URL: chrome.runtime.getURL("public/add-icon.png"),
 
   addSaveJobSeekerButton: () => {
@@ -102,24 +97,19 @@ const ReactionModule = {
       const button = DomUtils.createElement("button", {
         classNames: [
           "reactions-menu__reaction-index",
-
           "reactions-menu__reaction",
-
           ReactionModule.CUSTOM_SAVE_BUTTON_CLASS,
         ],
 
         attributes: {
           "aria-label": "Save Job Seeker",
-
           tabindex: "-1",
-
           type: "button",
         },
       });
 
       const span = DomUtils.createElement("span", {
         classNames: "reactions-menu__reaction-description",
-
         innerText: "Save Seeker",
       });
 
@@ -128,13 +118,9 @@ const ReactionModule = {
       const img = DomUtils.createElement("img", {
         classNames: [
           "reactions-icon",
-
           "reactions-menu__icon",
-
           "reactions-icon__consumption--large",
-
           "data-test-reactions-icon-type-SAVE",
-
           "data-test-reactions-icon-theme-light",
         ],
 
@@ -144,27 +130,19 @@ const ReactionModule = {
 
         attributes: {
           "data-test-reactions-icon-type": "SAVE",
-
           "data-test-reactions-icon-theme": "light",
-
           "data-test-reactions-icon-style": "consumption",
-
           "data-test-reactions-icon-size": "large",
         },
       });
 
       button.appendChild(span);
-
       button.appendChild(img);
-
       DomUtils.addEvent(
         button,
-
         "click",
-
         ReactionModule.handleSaveJobSeekerClick,
       );
-
       menu.appendChild(button);
     });
   },
@@ -177,22 +155,18 @@ const ReactionModule = {
 
     if (!postContainer) {
       console.log("Parent post not found.");
-
       alert("Post not found. Cannot save record.");
-
       return;
     }
 
     try {
       const jobSeekerRecord =
         ReactionModule.extractJobSeekerData(postContainer);
-
       const { jobSeekerRecords } = await ChromeStorage.get([
         "jobSeekerRecords",
       ]);
 
       const existingRecords = jobSeekerRecords || [];
-
       const isCached = existingRecords.some(
         (record) => record.postId === jobSeekerRecord.postId,
       );
@@ -201,7 +175,6 @@ const ReactionModule = {
         alert("This job seeker record is already cached.");
       } else {
         await ReactionModule.saveJobSeekerRecord(jobSeekerRecord);
-
         alert(
           `Job Seeker record saved successfully: ${jobSeekerRecord.username}`,
         );
@@ -235,7 +208,6 @@ const ReactionModule = {
 
     const desiredJobPosition = DomUtils.getCleanedText(
       positionElement,
-
       "Unknown Position",
     );
 
@@ -245,7 +217,6 @@ const ReactionModule = {
 
     const postText = DomUtils.getCleanedText(
       postTextElement,
-
       "Post text not found.",
     );
 
@@ -269,15 +240,10 @@ const ReactionModule = {
 
     return {
       username,
-
       desiredJobPosition,
-
       postPublicationDate,
-
       postId,
-
       postText,
-
       authorProfileUrl,
     };
   },
@@ -286,7 +252,6 @@ const ReactionModule = {
     let { jobSeekerRecords } = await ChromeStorage.get(["jobSeekerRecords"]);
 
     jobSeekerRecords = jobSeekerRecords || [];
-
     jobSeekerRecords.unshift(jobSeekerRecord);
 
     try {
@@ -294,7 +259,6 @@ const ReactionModule = {
 
       console.log(
         "Job Seeker record successfully added and saved:",
-
         jobSeekerRecords,
       );
     } catch (error) {
@@ -326,9 +290,7 @@ const QuillEditorModule = {
 
       if (!lastChild || lastChild.nodeType !== Node.TEXT_NODE) {
         const newTextNode = document.createTextNode("");
-
         pElement.appendChild(newTextNode);
-
         return newTextNode;
       }
 
@@ -372,11 +334,8 @@ const QuillEditorModule = {
 
   waitForAndSelectMention: (
     targetName,
-
     targetProfileSlug,
-
     maxRetries = 20,
-
     retryDelay = 200,
   ) => {
     return new Promise((resolve) => {
@@ -417,9 +376,7 @@ const QuillEditorModule = {
 
           if (foundSuggestion) {
             foundSuggestion.click();
-
             console.log(`Mention suggestion for: ${targetName} clicked.`);
-
             resolve(true);
 
             return;
@@ -446,7 +403,6 @@ const QuillEditorModule = {
           console.warn(
             `Maximum retries reached. No exact mention suggestion found for: ${targetName}.`,
           );
-
           resolve(false);
         }
       };
@@ -458,7 +414,6 @@ const QuillEditorModule = {
   mentionUsersFromArrayByTyping: async (usersToMention, editor) => {
     if (!editor) {
       console.warn("Quill editor not found. Cannot start mention process.");
-
       return;
     }
 
@@ -479,7 +434,6 @@ const QuillEditorModule = {
       // eslint-disable-next-line no-await-in-loop
       const selected = await QuillEditorModule.waitForAndSelectMention(
         user.username,
-
         user.authorProfileUrl,
       );
 
@@ -571,25 +525,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (editor) {
       QuillEditorModule.mentionUsersFromArrayByTyping(usersToMention, editor)
-
         .then(() => {
           sendResponse({
             status: "success",
-
             message: "Users successfully mentioned.",
           });
         })
-
         .catch((error) => {
           console.error(
             "Error during mention process in content script:",
-
             error,
           );
 
           sendResponse({
             status: "error",
-
             message: "Error during mention process.",
           });
         });
@@ -600,7 +549,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       sendResponse({
         status: "error",
-
         message: "No Quill editor found.",
       });
 
