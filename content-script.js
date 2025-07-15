@@ -11,9 +11,9 @@ const DomUtils = {
     }
 
     if (options.attributes) {
-      for (const key in options.attributes) {
+      Object.keys(options.attributes).forEach((key) => {
         element.setAttribute(key, options.attributes[key]);
-      }
+      });
     }
 
     if (options.innerText) {
@@ -52,7 +52,7 @@ const ChromeStorage = {
           console.error(
             "Error retrieving data from storage:",
 
-            chrome.runtime.lastError
+            chrome.runtime.lastError,
           );
 
           resolve({});
@@ -70,7 +70,7 @@ const ChromeStorage = {
           console.error(
             "Error saving data to storage:",
 
-            chrome.runtime.lastError
+            chrome.runtime.lastError,
           );
 
           reject(chrome.runtime.lastError);
@@ -91,7 +91,7 @@ const ReactionModule = {
 
   addSaveJobSeekerButton: () => {
     const reactionMenus = document.querySelectorAll(
-      ReactionModule.REACTIONS_MENU_SELECTOR
+      ReactionModule.REACTIONS_MENU_SELECTOR,
     );
 
     reactionMenus.forEach((menu) => {
@@ -162,7 +162,7 @@ const ReactionModule = {
 
         "click",
 
-        ReactionModule.handleSaveJobSeekerClick
+        ReactionModule.handleSaveJobSeekerClick,
       );
 
       menu.appendChild(button);
@@ -172,8 +172,7 @@ const ReactionModule = {
   handleSaveJobSeekerClick: async (e) => {
     const postContainer = DomUtils.closestAncestor(
       e.target,
-
-      ".fie-impression-container"
+      ".fie-impression-container",
     );
 
     if (!postContainer) {
@@ -195,7 +194,7 @@ const ReactionModule = {
       const existingRecords = jobSeekerRecords || [];
 
       const isCached = existingRecords.some(
-        (record) => record.postId === jobSeekerRecord.postId
+        (record) => record.postId === jobSeekerRecord.postId,
       );
 
       if (isCached) {
@@ -204,7 +203,7 @@ const ReactionModule = {
         await ReactionModule.saveJobSeekerRecord(jobSeekerRecord);
 
         alert(
-          `Job Seeker record saved successfully: ${jobSeekerRecord.username}`
+          `Job Seeker record saved successfully: ${jobSeekerRecord.username}`,
         );
       }
     } catch (error) {
@@ -215,7 +214,7 @@ const ReactionModule = {
         error.message.includes("Extension context invalidated")
       ) {
         alert(
-          "Error: Extension context invalidated. Please reload the LinkedIn page and try again."
+          "Error: Extension context invalidated. Please reload the LinkedIn page and try again.",
         );
       } else {
         alert("An unexpected error occurred while saving the record.");
@@ -225,29 +224,29 @@ const ReactionModule = {
 
   extractJobSeekerData: (postContainer) => {
     const usernameElement = postContainer.querySelector(
-      ".update-components-actor__title span[aria-hidden='true']"
+      ".update-components-actor__title span[aria-hidden='true']",
     );
 
     const username = DomUtils.getCleanedText(usernameElement, "Unknown User");
 
     const positionElement = postContainer.querySelector(
-      ".update-components-actor__description span[aria-hidden='true']"
+      ".update-components-actor__description span[aria-hidden='true']",
     );
 
     const desiredJobPosition = DomUtils.getCleanedText(
       positionElement,
 
-      "Unknown Position"
+      "Unknown Position",
     );
 
     const postTextElement = postContainer.querySelector(
-      ".update-components-text span[dir='rtl']"
+      ".update-components-text span[dir='rtl']",
     );
 
     const postText = DomUtils.getCleanedText(
       postTextElement,
 
-      "Post text not found."
+      "Post text not found.",
     );
 
     const postPublicationDate = new Date().toISOString();
@@ -261,7 +260,7 @@ const ReactionModule = {
     const postId = urn ? urn.split(":").pop() : "Unknown ID";
 
     const authorProfileLinkElement = postContainer.querySelector(
-      ".update-components-actor__meta-link"
+      ".update-components-actor__meta-link",
     );
 
     const authorProfileUrl = authorProfileLinkElement
@@ -291,12 +290,12 @@ const ReactionModule = {
     jobSeekerRecords.unshift(jobSeekerRecord);
 
     try {
-      await ChromeStorage.set({ jobSeekerRecords: jobSeekerRecords });
+      await ChromeStorage.set({ jobSeekerRecords });
 
       console.log(
         "Job Seeker record successfully added and saved:",
 
-        jobSeekerRecords
+        jobSeekerRecords,
       );
     } catch (error) {
       console.error("Error saving job seeker record:", error);
@@ -323,7 +322,7 @@ const QuillEditorModule = {
     }
 
     const ensureLastTextNode = () => {
-      let lastChild = pElement.lastChild;
+      const lastChild = pElement.lastChild;
 
       if (!lastChild || lastChild.nodeType !== Node.TEXT_NODE) {
         const newTextNode = document.createTextNode("");
@@ -336,7 +335,7 @@ const QuillEditorModule = {
       return lastChild;
     };
 
-    let lastTextNode = ensureLastTextNode();
+    const lastTextNode = ensureLastTextNode();
 
     lastTextNode.nodeValue += text;
 
@@ -358,15 +357,15 @@ const QuillEditorModule = {
       const char = text[i];
 
       editor.dispatchEvent(
-        new KeyboardEvent("keydown", { key: char, bubbles: true })
+        new KeyboardEvent("keydown", { key: char, bubbles: true }),
       );
 
       editor.dispatchEvent(
-        new KeyboardEvent("keypress", { key: char, bubbles: true })
+        new KeyboardEvent("keypress", { key: char, bubbles: true }),
       );
 
       editor.dispatchEvent(
-        new KeyboardEvent("keyup", { key: char, bubbles: true })
+        new KeyboardEvent("keyup", { key: char, bubbles: true }),
       );
     }
   },
@@ -378,28 +377,30 @@ const QuillEditorModule = {
 
     maxRetries = 20,
 
-    retryDelay = 200
+    retryDelay = 200,
   ) => {
-    return new Promise(async (resolve) => {
+    return new Promise((resolve) => {
       let retries = 0;
 
       const checkAndSelect = async () => {
         const mentionDropdown = document.querySelector(
-          QuillEditorModule.MENTION_DROPDOWN_SELECTOR
+          QuillEditorModule.MENTION_DROPDOWN_SELECTOR,
         );
 
         if (mentionDropdown) {
-          await new Promise((r) => setTimeout(r, 100));
+          await new Promise((r) => {
+            setTimeout(r, 100);
+          });
 
           const suggestions = mentionDropdown.querySelectorAll(
-            QuillEditorModule.MENTION_SUGGESTION_SELECTOR
+            QuillEditorModule.MENTION_SUGGESTION_SELECTOR,
           );
 
           let foundSuggestion = null;
 
           for (const suggestion of suggestions) {
             const nameElement = suggestion.querySelector(
-              ".search-typeahead-v2__hit-text"
+              ".search-typeahead-v2__hit-text",
             );
 
             const nameMatches =
@@ -426,14 +427,14 @@ const QuillEditorModule = {
             console.warn(
               `Dropdown appeared but no exact match for: ${targetName} found. Retrying... (${
                 retries + 1
-              }/${maxRetries})`
+              }/${maxRetries})`,
             );
           }
         } else {
           console.log(
             `Mention dropdown for ${targetName} not visible yet. Retrying... (${
               retries + 1
-            }/${maxRetries})`
+            }/${maxRetries})`,
           );
         }
 
@@ -443,7 +444,7 @@ const QuillEditorModule = {
           setTimeout(checkAndSelect, retryDelay);
         } else {
           console.warn(
-            `Maximum retries reached. No exact mention suggestion found for: ${targetName}.`
+            `Maximum retries reached. No exact mention suggestion found for: ${targetName}.`,
           );
 
           resolve(false);
@@ -464,22 +465,22 @@ const QuillEditorModule = {
     editor.focus();
 
     editor.innerHTML = "<p><br></p>";
-
     for (const user of usersToMention) {
       const mentionText = `@${user.username}`;
 
       console.log(
-        `Attempting to mention: ${user.username} (URL: ${user.authorProfileUrl})`
+        `Attempting to mention: ${user.username} (URL: ${user.authorProfileUrl})`,
       );
 
       QuillEditorModule.simulateTypingCharacters(mentionText, editor);
 
       console.log(`Typing for: ${user.username} completed.`);
 
+      // eslint-disable-next-line no-await-in-loop
       const selected = await QuillEditorModule.waitForAndSelectMention(
         user.username,
 
-        user.authorProfileUrl
+        user.authorProfileUrl,
       );
 
       if (selected) {
@@ -488,15 +489,17 @@ const QuillEditorModule = {
         QuillEditorModule.simulateTypingCharacters(" ", editor);
       } else {
         console.warn(
-          `Could not mention ${user.username}. Clearing editor for the next user.`
+          `Could not mention ${user.username}. Clearing editor for the next user.`,
         );
 
-        editor.innerHTML = "<p><br></p>";
+        editor.setContents([{ insert: "\n" }]);
 
         QuillEditorModule.resetCursor(editor);
       }
-
-      await new Promise((r) => setTimeout(r, 500));
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((r) => {
+        setTimeout(r, 500);
+      });
     }
 
     console.log("All requested users processed.");
@@ -542,7 +545,7 @@ const QuillEditorModule = {
       return activeEditor;
     } else {
       console.warn(
-        "No Quill editor currently focused. Attempting to find the first available editor."
+        "No Quill editor currently focused. Attempting to find the first available editor.",
       );
 
       return document.querySelector(QuillEditorModule.QUILL_EDITOR_SELECTOR);
@@ -581,7 +584,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           console.error(
             "Error during mention process in content script:",
 
-            error
+            error,
           );
 
           sendResponse({
