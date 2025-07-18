@@ -3,7 +3,7 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@fullstacksjs/eslint-config": "^13.2.0",
+    "@fullstacksjs/eslint-config": "^13.2.1",
     "eslint": "^9.31.0",
     "prettier": "^3.6.2",
     "typescript": "^5.8.3"

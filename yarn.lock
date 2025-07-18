@@ -190,10 +190,10 @@
     "@eslint/core" "^0.15.1"
     levn "^0.4.1"
 
-"@fullstacksjs/eslint-config@^13.2.0":
-  version "13.2.0"
-  resolved "https://registry.yarnpkg.com/@fullstacksjs/eslint-config/-/eslint-config-13.2.0.tgz#f32d9d40575d9dbd1ad4cfd00a61ad99f5d31577"
-  integrity sha512-CL/HTZWc6BTp8Ilq25lZ5dhXyD1BPIC99umLxXWw/EbmWPUN6okDZphcyKTKa2GAKKrzsOy5M+hYCOMOA/BNuw==
+"@fullstacksjs/eslint-config@^13.2.1":
+  version "13.2.1"
+  resolved "https://registry.yarnpkg.com/@fullstacksjs/eslint-config/-/eslint-config-13.2.1.tgz#2c30d7651f574d8aa0e18450e327391f9108ac23"
+  integrity sha512-D5Z8N/OFSrz8RY5+G2VXkGobsUo/zNhJ74DpUkX9FtVGiOJLcZtn/phK46MEzcebExPhatKbJLlxNYuqK69yKw==
   dependencies:
     "@eslint-react/eslint-plugin" "1.50.0"
     "@eslint/compat" "1.3.1"
@@ -2261,9 +2261,9 @@ picomatch@^2.3.1:
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
 picomatch@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.2.tgz#77c742931e8f3b8820946c76cd0c1f13730d1dab"
-  integrity sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.3.tgz#796c76136d1eead715db1e7bad785dedd695a042"
+  integrity sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==
 
 pify@^2.3.0:
   version "2.3.0"
